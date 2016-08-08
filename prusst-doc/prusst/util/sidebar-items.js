@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["VolatileCell","A convenient zero-overhead wrapper for volatile fields that implement `Copy` and `Clone`."]]});

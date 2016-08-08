@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `IntcConfig` struct in crate `prusst`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, IntcConfig">
+
+    <title>prusst::IntcConfig - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>prusst</a></p><script>window.sidebarCurrent = {name: 'IntcConfig', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>prusst</a>::<wbr><a class='struct' href=''>IntcConfig</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-412' class='srclink' href='../src/prusst/src/lib.rs.html#515-520' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct IntcConfig {
+    // some fields omitted
+}</pre><div class='docblock'><p>PRU interrupt controller configuration.</p>
+
+<p>A call to the <code>new_populated</code> method automatically initializes the data with the same defaults
+as the PRUSS_INTC_INITDATA macro of the C prussdrv library. Alternatively, a blank-state
+initialization data structure can be created with <code>new_empty</code> and then populated with the
+dedicated methods.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl <a class='struct' href='../prusst/struct.IntcConfig.html' title='prusst::IntcConfig'>IntcConfig</a></code></h3><div class='impl-items'><h4 id='method.new_empty' class='method'><code>fn <a href='#method.new_empty' class='fnname'>new_empty</a>() -&gt; <a class='struct' href='../prusst/struct.IntcConfig.html' title='prusst::IntcConfig'>IntcConfig</a></code></h4>
+<div class='docblock'><p>Constructs an empty PRU interrupt controller configuration.</p>
+</div><h4 id='method.new_populated' class='method'><code>fn <a href='#method.new_populated' class='fnname'>new_populated</a>() -&gt; <a class='struct' href='../prusst/struct.IntcConfig.html' title='prusst::IntcConfig'>IntcConfig</a></code></h4>
+<div class='docblock'><p>Constructs a PRU interrupt controller configuration with a default mapping.</p>
+
+<p>The mapping reflects the one defined in the <code>PRUSS_INTC_INITDATA</code> C macro of the C
+prussdrv library, namely:</p>
+
+<ul>
+<li><p>it maps:</p>
+
+<ul>
+<li><code>Sysevt::S17</code> to <code>Channel::C1</code>,</li>
+<li><code>Sysevt::S18</code> to <code>Channel::C0</code>,</li>
+<li><code>Sysevt::S19</code> to <code>Channel::C2</code>,</li>
+<li><code>Sysevt::S20</code> to <code>Channel::C3</code>,</li>
+<li><code>Sysevt::S21</code> to <code>Channel::C0</code>,</li>
+<li><code>Sysevt::S22</code> to <code>Channel::C1</code>,</li>
+</ul></li>
+<li><p>it maps:</p>
+
+<ul>
+<li><code>Channel::C0</code> to <code>Host::Pru0</code>,</li>
+<li><code>Channel::C1</code> to <code>Host::Pru1</code>,</li>
+<li><code>Channel::C2</code> to <code>Host::Evtout0</code>,</li>
+<li><code>Channel::C3</code> to <code>Host::Evtout1</code>,</li>
+</ul></li>
+<li><p>it enables:</p>
+
+<ul>
+<li><code>Sysevt::S17</code>,</li>
+<li><code>Sysevt::S18</code>,</li>
+<li><code>Sysevt::S19</code>,</li>
+<li><code>Sysevt::S20</code>,</li>
+<li><code>Sysevt::S21</code>,</li>
+<li><code>Sysevt::S22</code>,</li>
+</ul></li>
+<li><p>it enables:</p>
+
+<ul>
+<li><code>Host::Pru0</code>,</li>
+<li><code>Host::Pru1</code>,</li>
+<li><code>Host::Evtout0</code>,</li>
+<li><code>Host::Evtout1</code></li>
+</ul></li>
+</ul>
+</div><h4 id='method.enable_sysevts' class='method'><code>fn <a href='#method.enable_sysevts' class='fnname'>enable_sysevts</a>(&amp;mut self, sysevts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='enum' href='../prusst/enum.Sysevt.html' title='prusst::Sysevt'>Sysevt</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
+<div class='docblock'><p>Enables the specified system events.</p>
+
+<h1 id='panics' class='section-header'><a href='#panics'>Panics</a></h1>
+<p>This will panic if a system event is enabled several times.</p>
+</div><h4 id='method.enable_hosts' class='method'><code>fn <a href='#method.enable_hosts' class='fnname'>enable_hosts</a>(&amp;mut self, hosts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='enum' href='../prusst/enum.Host.html' title='prusst::Host'>Host</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
+<div class='docblock'><p>Enables the specified host interrupts.</p>
+
+<h1 id='panics-1' class='section-header'><a href='#panics-1'>Panics</a></h1>
+<p>This will panic if a host interrupt is enabled several times.</p>
+</div><h4 id='method.auto_enable_sysevts' class='method'><code>fn <a href='#method.auto_enable_sysevts' class='fnname'>auto_enable_sysevts</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Automatically enables system events that are already assigned to a channel.</p>
+</div><h4 id='method.auto_enable_hosts' class='method'><code>fn <a href='#method.auto_enable_hosts' class='fnname'>auto_enable_hosts</a>(&amp;mut self)</code></h4>
+<div class='docblock'><p>Automatically enables host interrupts that are already mapped to a channel.</p>
+</div><h4 id='method.map_sysevts_to_channels' class='method'><code>fn <a href='#method.map_sysevts_to_channels' class='fnname'>map_sysevts_to_channels</a>(&amp;mut self, scmap: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../prusst/enum.Sysevt.html' title='prusst::Sysevt'>Sysevt</a>, <a class='enum' href='../prusst/enum.Channel.html' title='prusst::Channel'>Channel</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
+<div class='docblock'><p>Assigns system events to channels.</p>
+
+<p>A channel can be targeted by several events but an event can be mapped to only one channel.</p>
+
+<h1 id='panics-2' class='section-header'><a href='#panics-2'>Panics</a></h1>
+<p>This will panic if a system event is mapped to several channels simultaneously.</p>
+</div><h4 id='method.map_channels_to_hosts' class='method'><code>fn <a href='#method.map_channels_to_hosts' class='fnname'>map_channels_to_hosts</a>(&amp;mut self, chmap: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='../prusst/enum.Channel.html' title='prusst::Channel'>Channel</a>, <a class='enum' href='../prusst/enum.Host.html' title='prusst::Host'>Host</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></h4>
+<div class='docblock'><p>Assigns channel numbers to host interrupts.</p>
+
+<p>A host interrupt can be targeted by several channels but a channel can be mapped to only
+one host.</p>
+
+<h1 id='panics-3' class='section-header'><a href='#panics-3'>Panics</a></h1>
+<p>This will panic if a channel is mapped to several hosts.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 id='derived_implementations'>Derived Implementations </h3><h3 class='impl'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../prusst/struct.IntcConfig.html' title='prusst::IntcConfig'>IntcConfig</a></code></h3><div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../prusst/struct.IntcConfig.html' title='prusst::IntcConfig'>IntcConfig</a></code></h4>
+<h4 id='method.clone_from' class='method'><span class="since">1.0.0</span><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code></h4>
+</div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "prusst";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

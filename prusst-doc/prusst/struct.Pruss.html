@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Pruss` struct in crate `prusst`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Pruss">
+
+    <title>prusst::Pruss - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>prusst</a></p><script>window.sidebarCurrent = {name: 'Pruss', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>prusst</a>::<wbr><a class='struct' href=''>Pruss</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-242' class='srclink' href='../src/prusst/src/lib.rs.html#107-125' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Pruss&lt;'a&gt; {
+    pub intc: <a class='struct' href='../prusst/struct.Intc.html' title='prusst::Intc'>Intc</a>,
+    pub pru0: <a class='struct' href='../prusst/struct.PruLoader.html' title='prusst::PruLoader'>PruLoader</a>,
+    pub pru1: <a class='struct' href='../prusst/struct.PruLoader.html' title='prusst::PruLoader'>PruLoader</a>,
+    pub dram0: <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>&lt;'a&gt;,
+    pub dram1: <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>&lt;'a&gt;,
+    pub dram2: <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>&lt;'a&gt;,
+    pub hostram: <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>&lt;'a&gt;,
+    // some fields omitted
+}</pre><div class='docblock'><p>Main interface to the PRU subsystem.</p>
+</div><h2 class='fields'>Fields</h2>
+<table><tr class='stab '>
+                             <td id='structfield.intc'><code>intc</code></td><td><div class='docblock'><p>PRU interrupt controller</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.pru0'><code>pru0</code></td><td><div class='docblock'><p>Program loader for PRU0</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.pru1'><code>pru1</code></td><td><div class='docblock'><p>Program loader for PRU1</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.dram0'><code>dram0</code></td><td><div class='docblock'><p>Data RAM for PRU0</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.dram1'><code>dram1</code></td><td><div class='docblock'><p>Data RAM for PRU1</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.dram2'><code>dram2</code></td><td><div class='docblock'><p>Shared data RAM</p>
+</div></td></tr><tr class='stab '>
+                             <td id='structfield.hostram'><code>hostram</code></td><td><div class='docblock'><p>Host memory</p>
+</div></td></tr></table><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='struct' href='../prusst/struct.Pruss.html' title='prusst::Pruss'>Pruss</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(intc_config: &amp;<a class='struct' href='../prusst/struct.IntcConfig.html' title='prusst::IntcConfig'>IntcConfig</a>) -&gt; <a class='type' href='../prusst/type.Result.html' title='prusst::Result'>Result</a>&lt;<a class='struct' href='../prusst/struct.Pruss.html' title='prusst::Pruss'>Pruss</a>&lt;'a&gt;&gt;</code></h4>
+<div class='docblock'><p>Creates a PRU subsystem context, mapping all necessary PRU registers and memory.</p>
+
+<p>The interrupt controller is initialized with the provided mapping.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html' title='core::ops::Drop'>Drop</a> for <a class='struct' href='../prusst/struct.Pruss.html' title='prusst::Pruss'>Pruss</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.drop' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/ops/trait.Drop.html#tymethod.drop' class='fnname'>drop</a>(&amp;mut self)</code></h4>
+</div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../prusst/struct.Pruss.html' title='prusst::Pruss'>Pruss</a>&lt;'a&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../prusst/struct.Pruss.html' title='prusst::Pruss'>Pruss</a>&lt;'a&gt;</code></h3><div class='impl-items'></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "prusst";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `MemSegment` struct in crate `prusst`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, MemSegment">
+
+    <title>prusst::MemSegment - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>prusst</a></p><script>window.sidebarCurrent = {name: 'MemSegment', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>prusst</a>::<wbr><a class='struct' href=''>MemSegment</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-377' class='srclink' href='../src/prusst/src/lib.rs.html#413-420' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct MemSegment&lt;'a&gt; {
+    // some fields omitted
+}</pre><div class='docblock'><p>View of a contiguous memory segment.</p>
+
+<p>The design of MemSegment is meant to allow allocation at arbitrary addresses while preventing
+memory aliasing. This is achieved by allowing segments to be recursively split and by
+borrowing segments upon object allocation, thus preventing further splitting and allocation
+until the allocated object goes out of scope. For this reason, segments are neither copyable
+nor clonable.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>&lt;'a&gt;</code></h3><div class='impl-items'><h4 id='method.alloc' class='method'><code>fn <a href='#method.alloc' class='fnname'>alloc</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a>&gt;(&amp;mut self, source: T) -&gt; &amp;mut T</code></h4>
+<div class='docblock'><p>Allocates an object at the beginning of the segment.</p>
+
+<h1 id='panics' class='section-header'><a href='#panics'>Panics</a></h1>
+<p>This function will panic if the beginning of the segment is not properly aligned
+for type T or if the size of T exceeds its capacity.</p>
+</div><h4 id='method.alloc_uninitialized' class='method'><code>unsafe fn <a href='#method.alloc_uninitialized' class='fnname'>alloc_uninitialized</a>&lt;T: <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html' title='core::marker::Copy'>Copy</a>&gt;(&amp;mut self) -&gt; &amp;mut T</code></h4>
+<div class='docblock'><p>Allocates an object at the begining of the segment without initializing it.</p>
+
+<p>This can save some unecessary initialization if the PRU is anyway going to initialize
+memory before it will be read by the host. In some cases, it can also be used to avoid
+trashing the stack with a large temporary initialization object if for some reason the
+compiler cannot inline the call to <code>alloc</code>.</p>
+
+<h1 id='undefined-behavior' class='section-header'><a href='#undefined-behavior'>Undefined Behavior</a></h1>
+<p>Reading an uninitialized object is undefined behavior (even for Copy types).</p>
+
+<h1 id='panics-1' class='section-header'><a href='#panics-1'>Panics</a></h1>
+<p>This function will panic if the beginning of the segment is not properly aligned
+for type T or if the size of T exceeds its capacity.</p>
+</div><h4 id='method.begin' class='method'><code>fn <a href='#method.begin' class='fnname'>begin</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+<div class='docblock'><p>Position at which the segment starts (in bytes).</p>
+</div><h4 id='method.end' class='method'><code>fn <a href='#method.end' class='fnname'>end</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></h4>
+<div class='docblock'><p>Position at which the segment ends (in bytes).</p>
+</div><h4 id='method.split_at' class='method'><code>fn <a href='#method.split_at' class='fnname'>split_at</a>(&amp;mut self, position: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a>) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>, <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a></code></h4>
+<div class='docblock'><p>Splits the memory segment into two at the given byte position.</p>
+
+<p>Note that positions (addresses) are absolute and remain valid after the splitting
+operation. If for instance a segment is split at 0x00001000, the <code>begin</code> method of
+the second segment hence created will return 0x00001000 and not 0x00000000.</p>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> for <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>&lt;'a&gt;</code></h3><div class='impl-items'></div><h3 class='impl'><code>impl&lt;'a&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html' title='core::marker::Sync'>Sync</a> for <a class='struct' href='../prusst/struct.MemSegment.html' title='prusst::MemSegment'>MemSegment</a>&lt;'a&gt;</code></h3><div class='impl-items'></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "prusst";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>
