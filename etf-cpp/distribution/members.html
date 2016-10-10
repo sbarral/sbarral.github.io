@@ -1,0 +1,187 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <base href="../">
+
+        <link rel="stylesheet" href="book.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+
+        <!-- MathJax -->
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Fetch JQuery from CDN but have a local fallback -->
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            if (typeof jQuery == 'undefined') {
+                document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
+            }
+        </script>
+    </head>
+    <body class="light">
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme = localStorage.getItem('theme');
+            if (theme == null) { theme = 'light'; }
+            $('body').removeClass().addClass(theme);
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var sidebar = localStorage.getItem('sidebar');
+            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
+            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+        </script>
+
+        <div id="sidebar" class="sidebar">
+            <ul class="chapter"><li><a href="introduction.html"><strong>1.</strong> Introduction</a></li><li><a href="distribution.html"><strong>2.</strong> &lt;etf/distribution.hpp&gt;</a></li><li><ul class="section"><li><a href="distribution/overview.html"><strong>2.1.</strong> Distributions overview</a></li><li><a href="distribution/constructors.html"><strong>2.2.</strong> Constructors</a></li><li><a href="distribution/members.html" class="active"><strong>2.3.</strong> Class members</a></li><li><a href="distribution/functions.html"><strong>2.4.</strong> Non-member functions</a></li></ul></li><li><a href="random_digits.html"><strong>3.</strong> &lt;etf/random_digits.hpp&gt;</a></li><li><ul class="section"><li><a href="random_digits/integer_traits.html"><strong>3.1.</strong> Fixed-precision integer traits</a></li><li><a href="random_digits/random_numbers.html"><strong>3.2.</strong> Fixed-precision random numbers</a></li></ul></li><li><a href="util.html"><strong>4.</strong> &lt;etf/util.hpp&gt;</a></li><li><ul class="section"><li><a href="util/prepartitioning.html"><strong>4.1.</strong> Pre-partitoning</a></li><li><a href="util/partitioning.html"><strong>4.2.</strong> Partitioning</a></li><li><a href="util/outer_distributions.html"><strong>4.3.</strong> Outer distributions helper classes</a></li></ul></li><li><a href="license.html"><strong>5.</strong> License</a></li></ul>
+        </div>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar" class="menu-bar">
+                    <div class="left-buttons">
+                        <i id="sidebar-toggle" class="fa fa-bars"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                    </div>
+                </div>
+
+                <div id="content" class="content">
+                    <h2>Class members</h2>
+<p>The <code>result_type</code>, <code>min()</code>, <code>max()</code> <code>reset()</code> and <code>operator()</code> members found in
+the C++11/14 standard library distributions are implemented.</p>
+<p>The signature of the <code>min()</code>, <code>max()</code> and <code>reset()</code> functions is slightly
+altered, however, with the use of a dummy, defaulted template parameter. This
+allows the normal calling syntax to be preserved while deferring instantiation
+until the member function is explicitly referred to.
+The motivation for this signature is that, for composite distributions, these
+member functions need to call their counterparts from the user-supplied outer
+distributions, which have not necessarily been implemented.
+Deferring the instantiation of these member functions relieves therefore the
+user from the need to implement them in the provided outer distribution as long
+as the corresponding member functions are never used.</p>
+<h3>Member types</h3>
+<table><thead><tr><td>Type          </td><td> Description</td></tr></thead>
+<tr><td><code>result_type</code> </td><td> Type of the generated random variates (same as the first class template argument)</td></tr>
+</table>
+<h3>Member function <em>operator()</em></h3>
+<pre><code class="language-c++">template&lt;class RngType&gt;
+RealType operator()(RngType&amp; g);
+</code></pre>
+<p>Returns a random variate.</p>
+<table><thead><tr><td>Parameter          </td><td> Description</td></tr></thead>
+<tr><td><code>RngType</code>          </td><td> A type meeting the requirements of a C++11 uniform random number generator with the additional requirement that it should produce independent bits; this would in principle mean that its minimum value should be 0 and its maximum value a power of 2 less 1, but for the sake of practicality a minimum value of 1 and/or a maximum value equal to a power of 2 less 2 is tolerated (the bit correlations introduced by the relaxed requirement is usually weak enough to be ignored)</td></tr>
+</table>
+<blockquote>
+<p>Why the additional requirement on RngType?</p>
+<p>The issue at stake is C++11's mandated implementation of
+<code>generate_canonical</code>, which by trying to achieve too much genericity led to
+the infamous
+<a href="http://open-std.org/JTC1/SC22/WG21/docs/lwg-active.html#2524">LWG issue 2524</a>.
+There is very little hope that the issue can be fixed without a severe
+penalty on efficiency.</p>
+<p>Putting aside backward compatibility issues, a reasonable solution to this
+problem is to require that independent bits be produced (in intent at least:
+pseudo random number generators obviously do not produce truly independent
+bits), allowing an efficient and robust implementation of
+<code>generate_canonical()</code> based on bit sequences obtained by simple
+concatenation or truncation of the generated numbers.</p>
+<p>For this reason, the <em>&lt;etf&gt;</em> library internally uses
+<a href="random_digits/random_numbers.html"><em>generate_random_real()</em></a>
+as a (nearly) drop-in replacement for <code>generate_canonical()</code>, and a related
+function,
+<a href="random_digits/random_numbers.html"><em>generate_random_integer()</em></a>,
+both of which will assert at compile-time that the minimum value is 0 or 1
+and that the maximum value is a power of 2 less 1 or less 2.  Note that these
+requirements are satisfied by all default random number generators of the
+standard library, and are likely to be satisfied by the vast majority of
+commonly used generators.</p>
+</blockquote>
+<h3>Member function <em>min()</em> and <em>max()</em></h3>
+<pre><code class="language-c++">template&lt;typename=void&gt;
+result_type min() const;
+</code></pre>
+<pre><code class="language-c++">template&lt;typename=void&gt;
+result_type max() const;
+</code></pre>
+<p>Returns the greatest lower bound and the least upper bound of the range of
+values potentially generated by <code>operator()</code>.</p>
+<h3>Member function <em>reset()</em></h3>
+<pre><code class="language-c++">template&lt;typename=void&gt;
+void reset();
+</code></pre>
+<p>Resets the distribution to ensure that the values generated by subsequent
+calls to <code>operator()</code> are independent from formerly generated values.</p>
+<p>Since ETF distributions are stateless, this function only calls the <code>reset()</code>
+member of the user-supplied outer distribution (if there is one).</p>
+<h3>Member function <em>operator=()</em></h3>
+<p>All distributions have implicitly-declared copy assignment operators, which
+may or may not be deleted depending on the types of associated functions
+and outer distributions.</p>
+
+                </div>
+
+                <!-- Mobile navigation buttons -->
+                
+                    <a href="distribution/constructors.html" class="mobile-nav-chapters previous">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="distribution/functions.html" class="mobile-nav-chapters next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+
+            </div>
+
+            
+                <a href="distribution/constructors.html" class="nav-chapters previous" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+            
+
+            
+                <a href="distribution/functions.html" class="nav-chapters next" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if ($(".fa").css("font-family") !== "FontAwesome") {
+                $('<link rel="stylesheet" type="text/css" href="_FontAwesome/css/font-awesome.css">').prependTo('head');
+            }
+        </script>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+    </body>
+</html>

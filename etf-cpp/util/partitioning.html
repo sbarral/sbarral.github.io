@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <base href="../">
+
+        <link rel="stylesheet" href="book.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+
+        <!-- MathJax -->
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Fetch JQuery from CDN but have a local fallback -->
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            if (typeof jQuery == 'undefined') {
+                document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
+            }
+        </script>
+    </head>
+    <body class="light">
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme = localStorage.getItem('theme');
+            if (theme == null) { theme = 'light'; }
+            $('body').removeClass().addClass(theme);
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var sidebar = localStorage.getItem('sidebar');
+            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
+            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+        </script>
+
+        <div id="sidebar" class="sidebar">
+            <ul class="chapter"><li><a href="introduction.html"><strong>1.</strong> Introduction</a></li><li><a href="distribution.html"><strong>2.</strong> &lt;etf/distribution.hpp&gt;</a></li><li><ul class="section"><li><a href="distribution/overview.html"><strong>2.1.</strong> Distributions overview</a></li><li><a href="distribution/constructors.html"><strong>2.2.</strong> Constructors</a></li><li><a href="distribution/members.html"><strong>2.3.</strong> Class members</a></li><li><a href="distribution/functions.html"><strong>2.4.</strong> Non-member functions</a></li></ul></li><li><a href="random_digits.html"><strong>3.</strong> &lt;etf/random_digits.hpp&gt;</a></li><li><ul class="section"><li><a href="random_digits/integer_traits.html"><strong>3.1.</strong> Fixed-precision integer traits</a></li><li><a href="random_digits/random_numbers.html"><strong>3.2.</strong> Fixed-precision random numbers</a></li></ul></li><li><a href="util.html"><strong>4.</strong> &lt;etf/util.hpp&gt;</a></li><li><ul class="section"><li><a href="util/prepartitioning.html"><strong>4.1.</strong> Pre-partitoning</a></li><li><a href="util/partitioning.html" class="active"><strong>4.2.</strong> Partitioning</a></li><li><a href="util/outer_distributions.html"><strong>4.3.</strong> Outer distributions helper classes</a></li></ul></li><li><a href="license.html"><strong>5.</strong> License</a></li></ul>
+        </div>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar" class="menu-bar">
+                    <div class="left-buttons">
+                        <i id="sidebar-toggle" class="fa fa-bars"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                    </div>
+                </div>
+
+                <div id="content" class="content">
+                    <h2>Partitioning</h2>
+<p>The ETF algorithm requires a pre-processing step whereby a majorizing function
+for the probability density function is sought in the form of equal-area
+contiguous vertical rectangles sitting on the <em>x</em> axis.
+The support of these rectangles over the <em>x</em> axis defines the ETF partition.</p>
+<p>At the moment, the only partition solvers implemented are based on a
+multi-variate Newton method:</p>
+<pre><code class="language-c++">template&lt;class Func, class DFunc, class InputIt1, class InputIt2&gt;
+partition_data&lt;typename std::iterator_traits&lt;InputIt1&gt;::value_type&gt;
+newton_partition(
+    Func f,
+    DFunc df,
+    InputIt1 x_initial_first,
+    InputIt1 x_initial_last,
+    InputIt2 x_extremum_first,
+    InputIt2 x_extremum_last,
+    typename std::iterator_traits&lt;InputIt1&gt;::value_type eps,
+    typename std::iterator_traits&lt;InputIt1&gt;::value_type relax = 1,
+    unsigned int max_iter = 100);
+</code></pre>
+<pre><code class="language-c++">template&lt;class Func, class DFunc, class InputIt1&gt;
+partition_data&lt;typename std::iterator_traits&lt;InputIt1&gt;::value_type&gt;
+newton_partition_monotonic(
+    Func f,
+    DFunc df,
+    InputIt1 x_initial_first,
+    InputIt1 x_initial_last,
+    typename std::iterator_traits&lt;InputIt1&gt;::value_type eps,
+    typename std::iterator_traits&lt;InputIt1&gt;::value_type relax = 1,
+    unsigned int max_iter = 100);
+</code></pre>
+<p>The second solver is a specialization for the case of monotonic probability
+density functions.</p>
+<p>These solvers compute an ETF partition of the interval bounded by the first and
+last points of the vector of abcissae passed in argument. The returned object
+include the partition as well the infimum and supremum of the function over
+each sub-interval.</p>
+<p>For faster convergence it is recommended to provide a reasonable initial
+estimate of the partition abcissae passed in arguments.</p>
+<p>The derivative <code>df</code> of <code>f</code> must be provided. For non-monotonic probability
+density functions, an ordered sequence of the <em>x</em> abcissae of inner function
+extrema (boundary points excluded) must as well be provided.</p>
+<p>The tolerance is the maximum relative dispersion of upper rectangle areas,
+computed as the difference between the largest and smallest area relative
+to the average area.</p>
+<p>An object with empty tables (size 0) is returned if the algorithm fails to
+converge.</p>
+<p>In order to improve convergence robustness (respectively convergence rate),
+successive under-relaxation (respectively over-relaxation) may be optionally
+requested by setting the relaxation factor to less (respectively more)
+than 1.</p>
+<p>The maximum number of iterations may be optionally specified but the default
+value is rather conservative and should prove adequate for most cases unless
+a very small relaxation factor is used.</p>
+<p>The complexity of these solvers is Ο(<em>N</em>) where <em>N</em> is the number of
+sub-intervals. For sufficiently well-behaved functions the convergence rate
+is quadratic with respect to tolerance <code>eps</code>.</p>
+<h3>Arguments</h3>
+<table><thead><tr><td>Argument                              </td><td> Description</td></tr></thead>
+<tr><td><code>f</code>                                   </td><td> Function proportional to the probability density function</td></tr>
+<tr><td><code>df</code>                                  </td><td> Derivative of <code>f</code></td></tr>
+<tr><td><code>x_initial_first</code>, <code>x_initial_last</code>   </td><td> Input iterator range of an ordered sequence of abcissae defining a partition of a bounded interval for which the rectangles making up an upper Riemann sum of <code>func</code> have, preferably, approximately equal areas</td></tr>
+<tr><td><code>x_extremum_first</code>, <code>x_extremum_last</code> </td><td> Input iterator range of an ordered sequence of the abcissae <em>x</em> at which <code>f</code> has a local extremum, excluding boundary points</td></tr>
+<tr><td><code>eps</code>                                 </td><td> Tolerance, defined as the maximum dispersion of upper rectangle areas relatively to the average rectangle area</td></tr>
+<tr><td><code>relax</code>                               </td><td> Relaxation factor for the iterative Newton solver</td></tr>
+<tr><td><code>max_iter</code>                            </td><td> Maximum number of iteration of the Newton method before giving up</td></tr>
+</table>
+<h3>Return value</h3>
+<p>The return value is a struct with 3 public member variables:</p>
+<pre><code class="language-c++">template&lt;typename RealType&gt;
+struct partition_data
+{
+    std::vector&lt;RealType&gt; x;
+    std::vector&lt;RealType&gt; finf;
+    std::vector&lt;RealType&gt; fsup;
+};
+</code></pre>
+<p>Upon successful convergence of the solver, the members of the return value
+satisfy the following post-conditions:</p>
+<ul>
+<li>
+<p><code>size(x)==std::distance(x_initial_first, x_initial_last)</code></p>
+</li>
+<li>
+<p><code>size(finf)==size(x)-1</code></p>
+</li>
+<li>
+<p><code>size(fsup)==size(x)-1</code></p>
+</li>
+</ul>
+<p>If the solver fails to converge after <code>max_iter</code> iterations, however, the
+post-conditions become:</p>
+<ul>
+<li>
+<p><code>size(x)==0</code></p>
+</li>
+<li>
+<p><code>size(finf)==0</code></p>
+</li>
+<li>
+<p><code>size(fsup)==0</code></p>
+</li>
+</ul>
+<table><thead><tr><td>Member variable </td><td> Description</td></tr></thead>
+<tr><td><code>x</code>             </td><td> Sequence of abcissae defining the ETF partition</td></tr>
+<tr><td><code>finf</code>          </td><td> Sequence of infima for each of the partition sub-interval</td></tr>
+<tr><td><code>fsup</code>          </td><td> Sequence of suprema for each of the partition sub-interval</td></tr>
+</table>
+
+                </div>
+
+                <!-- Mobile navigation buttons -->
+                
+                    <a href="util/prepartitioning.html" class="mobile-nav-chapters previous">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="util/outer_distributions.html" class="mobile-nav-chapters next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+
+            </div>
+
+            
+                <a href="util/prepartitioning.html" class="nav-chapters previous" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+            
+
+            
+                <a href="util/outer_distributions.html" class="nav-chapters next" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if ($(".fa").css("font-family") !== "FontAwesome") {
+                $('<link rel="stylesheet" type="text/css" href="_FontAwesome/css/font-awesome.css">').prependTo('head');
+            }
+        </script>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+    </body>
+</html>

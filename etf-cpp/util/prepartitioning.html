@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <base href="../">
+
+        <link rel="stylesheet" href="book.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+
+        <!-- MathJax -->
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Fetch JQuery from CDN but have a local fallback -->
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            if (typeof jQuery == 'undefined') {
+                document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
+            }
+        </script>
+    </head>
+    <body class="light">
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme = localStorage.getItem('theme');
+            if (theme == null) { theme = 'light'; }
+            $('body').removeClass().addClass(theme);
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var sidebar = localStorage.getItem('sidebar');
+            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
+            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+        </script>
+
+        <div id="sidebar" class="sidebar">
+            <ul class="chapter"><li><a href="introduction.html"><strong>1.</strong> Introduction</a></li><li><a href="distribution.html"><strong>2.</strong> &lt;etf/distribution.hpp&gt;</a></li><li><ul class="section"><li><a href="distribution/overview.html"><strong>2.1.</strong> Distributions overview</a></li><li><a href="distribution/constructors.html"><strong>2.2.</strong> Constructors</a></li><li><a href="distribution/members.html"><strong>2.3.</strong> Class members</a></li><li><a href="distribution/functions.html"><strong>2.4.</strong> Non-member functions</a></li></ul></li><li><a href="random_digits.html"><strong>3.</strong> &lt;etf/random_digits.hpp&gt;</a></li><li><ul class="section"><li><a href="random_digits/integer_traits.html"><strong>3.1.</strong> Fixed-precision integer traits</a></li><li><a href="random_digits/random_numbers.html"><strong>3.2.</strong> Fixed-precision random numbers</a></li></ul></li><li><a href="util.html"><strong>4.</strong> &lt;etf/util.hpp&gt;</a></li><li><ul class="section"><li><a href="util/prepartitioning.html" class="active"><strong>4.1.</strong> Pre-partitoning</a></li><li><a href="util/partitioning.html"><strong>4.2.</strong> Partitioning</a></li><li><a href="util/outer_distributions.html"><strong>4.3.</strong> Outer distributions helper classes</a></li></ul></li><li><a href="license.html"><strong>5.</strong> License</a></li></ul>
+        </div>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar" class="menu-bar">
+                    <div class="left-buttons">
+                        <i id="sidebar-toggle" class="fa fa-bars"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                    </div>
+                </div>
+
+                <div id="content" class="content">
+                    <h2>Pre-partitioning</h2>
+<p>The ETF algorithm requires a pre-processing step whereby a majorizing function
+for the probability density function is sought in the form of equal-area
+contiguous vertical rectangles sitting on the <em>x</em> axis.
+The support of these rectangles over the <em>x</em> axis defines the ETF partition.</p>
+<p>Pre-partitioning consists in finding a first approximation of the ETF partition
+of the <em>x</em> axis to be used by the final partition solver.</p>
+<p>At the moment, a trivial (but fast) pre-partitioning algorithm based on
+the trapezoidal rule is available:</p>
+<pre><code class="language-c++">template&lt;typename RealType, class Func&gt;
+std::vector&lt;RealType&gt;
+trapezoidal_rule_prepartition(Func f,
+                              RealType x0,
+                              RealType x1,
+                              std::size_t nb_intervals,
+                              std::size_t nb_points);
+</code></pre>
+<pre><code class="language-c++">template&lt;typename RealType, class Func&gt;
+std::vector&lt;RealType&gt;
+trapezoidal_rule_prepartition(Func f,
+                              RealType x0,
+                              RealType x1,
+                              std::size_t nb_intervals);
+</code></pre>
+<p>where the second overload is equivalent to setting <code>nb_points</code> to
+<code>nb_partitions</code>.</p>
+<p>These functions apply the trapezoidal rule to the supplied function <code>f</code> over a
+regular grid with <code>nb_points</code> grid points (including boundary nodes) to divide
+interval [<code>x0</code>, <code>x1</code>] into the specified number of sub-intervals such that the
+areas under the trapeze quadrature are the same in each sub-interval.  The
+returned vector is the set of abscissae.</p>
+<h3>Arguments</h3>
+<table><thead><tr><td>Argument        </td><td> Description</td></tr></thead>
+<tr><td><code>f</code>             </td><td> Function proportional to the probability density function</td></tr>
+<tr><td><code>x0</code>, <code>x1</code>      </td><td> Boundaries of the interval</td></tr>
+<tr><td><code>nb_intervals</code>  </td><td> Number of sub-intervals in the generated partition</td></tr>
+<tr><td><code>nb_points</code>     </td><td> Number of points (including boundary nodes) to be used for the trapezoidal rule</td></tr>
+</table>
+<h3>Return value</h3>
+<p>The set of abcissae defining the partition.</p>
+
+                </div>
+
+                <!-- Mobile navigation buttons -->
+                
+                    <a href="util.html" class="mobile-nav-chapters previous">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="util/partitioning.html" class="mobile-nav-chapters next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+
+            </div>
+
+            
+                <a href="util.html" class="nav-chapters previous" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+            
+
+            
+                <a href="util/partitioning.html" class="nav-chapters next" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if ($(".fa").css("font-family") !== "FontAwesome") {
+                $('<link rel="stylesheet" type="text/css" href="_FontAwesome/css/font-awesome.css">').prependTo('head');
+            }
+        </script>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+    </body>
+</html>

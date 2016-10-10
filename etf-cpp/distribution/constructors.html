@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <base href="../">
+
+        <link rel="stylesheet" href="book.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+
+        <!-- MathJax -->
+        <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Fetch JQuery from CDN but have a local fallback -->
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+            if (typeof jQuery == 'undefined') {
+                document.write(unescape("%3Cscript src='jquery.js'%3E%3C/script%3E"));
+            }
+        </script>
+    </head>
+    <body class="light">
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme = localStorage.getItem('theme');
+            if (theme == null) { theme = 'light'; }
+            $('body').removeClass().addClass(theme);
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var sidebar = localStorage.getItem('sidebar');
+            if (sidebar === "hidden") { $("html").addClass("sidebar-hidden") }
+            else if (sidebar === "visible") { $("html").addClass("sidebar-visible") }
+        </script>
+
+        <div id="sidebar" class="sidebar">
+            <ul class="chapter"><li><a href="introduction.html"><strong>1.</strong> Introduction</a></li><li><a href="distribution.html"><strong>2.</strong> &lt;etf/distribution.hpp&gt;</a></li><li><ul class="section"><li><a href="distribution/overview.html"><strong>2.1.</strong> Distributions overview</a></li><li><a href="distribution/constructors.html" class="active"><strong>2.2.</strong> Constructors</a></li><li><a href="distribution/members.html"><strong>2.3.</strong> Class members</a></li><li><a href="distribution/functions.html"><strong>2.4.</strong> Non-member functions</a></li></ul></li><li><a href="random_digits.html"><strong>3.</strong> &lt;etf/random_digits.hpp&gt;</a></li><li><ul class="section"><li><a href="random_digits/integer_traits.html"><strong>3.1.</strong> Fixed-precision integer traits</a></li><li><a href="random_digits/random_numbers.html"><strong>3.2.</strong> Fixed-precision random numbers</a></li></ul></li><li><a href="util.html"><strong>4.</strong> &lt;etf/util.hpp&gt;</a></li><li><ul class="section"><li><a href="util/prepartitioning.html"><strong>4.1.</strong> Pre-partitoning</a></li><li><a href="util/partitioning.html"><strong>4.2.</strong> Partitioning</a></li><li><a href="util/outer_distributions.html"><strong>4.3.</strong> Outer distributions helper classes</a></li></ul></li><li><a href="license.html"><strong>5.</strong> License</a></li></ul>
+        </div>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar" class="menu-bar">
+                    <div class="left-buttons">
+                        <i id="sidebar-toggle" class="fa fa-bars"></i>
+                        <i id="theme-toggle" class="fa fa-paint-brush"></i>
+                    </div>
+
+                    <h1 class="menu-title"></h1>
+
+                    <div class="right-buttons">
+                        <i id="print-button" class="fa fa-print" title="Print this book"></i>
+                    </div>
+                </div>
+
+                <div id="content" class="content">
+                    <h2>Constructors</h2>
+<p>Distributions are generally constructed from pre-computed tables containing
+the partition abcissae as well as the infinum and supremum of the probability
+density function over the sub-interval.
+Composite distributions also require an outer distribution and, possibly,
+the probability density function used for rejection sampling on the outer
+interval.</p>
+<p>All distributions also declare default, copy and move constructors, which may
+or may not be deleted depending on the types of associated functions and outer
+distributions.</p>
+<p>Note that using a default-constructed distribution through the <code>min()</code>, <code>max()</code>
+or <code>operator()</code> members functions is undefined behavior.</p>
+<h3>Mandatory arguments</h3>
+<p>The following arguments are mandated to construct a distribution from partition
+data:</p>
+<table><thead><tr><td>Argument                   </td><td> Description</td></tr></thead>
+<tr><td><code>x_first</code>, <code>x_last</code>        </td><td> Input iterator range of a sequence of abcissae defining a partition of a bounded interval for which the rectangles making up an upper Riemann sum of <code>func</code> have equal areas; the number of elements of the sequence must be equal to 2<em>ᴺ</em>+1 where <em>N</em> is the third class template parameter</td></tr>
+<tr><td><code>finf_first</code>, <code>fsup_first</code> </td><td> Input iterators pointing to the beginning of sequences of the infimum and supremum of <code>func</code> over each sub-interval of the partition; the number of elements of both sequences must be equal to 2<em>ᴺ</em></td></tr>
+<tr><td><code>func</code>                     </td><td> Function or functor proportional to the probability density function of the distribution to be sampled; <code>func</code> does not need to be normalized</td></tr>
+</table>
+<h3>Additional argument for composite distributions</h3>
+<p>The generic 5-parameter distribution types (composite distributions)
+additionaly require:</p>
+<table><thead><tr><td>Argument     </td><td> Description</td></tr></thead>
+<tr><td><code>outer_dist</code> </td><td> User-provided distribution for outer interval sampling</td></tr>
+<tr><td><code>outer_area</code> </td><td> Total area under <code>func</code> over the outer interval</td></tr>
+</table>
+<p>whereas the generic 6-parameter distribution types (rejection-sampled composite
+distributions) require:</p>
+<table><thead><tr><td>Argument     </td><td> Description</td></tr></thead>
+<tr><td><code>outer_dist</code> </td><td> User-provided proposal distribution for rejection sampling within the outer interval</td></tr>
+<tr><td><code>outer_func</code> </td><td> Majorizing, non-normalized probability distribution function corresponding to the provided <code>outer_dist</code>; its scaling must be consistent with that of <code>func</code>, i.e. <code>outer_func</code> may not be less than <code>func</code> anywhere within the outer interval</td></tr>
+<tr><td><code>outer_area</code> </td><td> Total area under <code>outer_func</code> over the outer interval</td></tr>
+</table>
+<p>Finally, the <code>symmetric_distribution&lt;...&gt;</code> family requires as first argument:</p>
+<table><thead><tr><td>Argument </td><td> Description</td></tr></thead>
+<tr><td><code>x0</code>      </td><td> Location of the symmetry axis.</td></tr>
+</table>
+<h3>Exceptions</h3>
+<p>The following exception is thrown if a distribution with a <em>N</em>-bit table index
+is constructed with a sequence <code>x_first</code>, <code>x_last</code> which length differs from
+2<em>ᴺ</em>+1:</p>
+<pre><code class="language-c++">class invalid_table_size : public std::invalid_argument {...};
+</code></pre>
+<h3>Constructor declarations for the <em>distribution&lt;...&gt;</em> family</h3>
+<p>(default, copy and move constructors omitted)</p>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+distribution&lt;RealType, W, N, Func&gt;::distribution(
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func);
+</code></pre>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func,
+         typename OuterDist&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+distribution&lt;RealType, W, N, Func, OuterDist&gt;::distribution(
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func,
+    OuterDist outer_dist,
+    RealType outer_area);
+</code></pre>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func,
+         typename OuterDist, typename OuterFunc&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+distribution&lt;RealType, W, N, Func, OuterDist, OuterFunc&gt;::distribution(
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func,
+    OuterDist outer_dist, OuterFunc outer_func,
+    RealType outer_area);
+</code></pre>
+<h3>Constructor declarations for the <em>central_distribution&lt;...&gt;</em> family</h3>
+<p>(default, copy and move constructors omitted)</p>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+central_distribution&lt;RealType, W, N, Func&gt;::central_distribution(
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func);
+</code></pre>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func,
+         typename OuterDist&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+central_distribution&lt;RealType, W, N, Func, OuterDist&gt;::central_distribution(
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func,
+    OuterDist outer_dist,
+    RealType outer_area);
+</code></pre>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func,
+         typename OuterDist, typename OuterFunc&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+central_distribution&lt;RealType, W, N, Func,
+                     OuterDist, OuterFunc&gt;::central_distribution(
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func,
+    OuterDist outer_dist, OuterFunc outer_func,
+    RealType outer_area);
+</code></pre>
+<h3>Constructor declarations for the <em>symmetric_distribution&lt;...&gt;</em> family</h3>
+<p>(default, copy and move constructors omitted)</p>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+symmetric_distribution&lt;RealType, W, N, Func&gt;::symmetric_distribution(
+    RealType x0,
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func);
+</code></pre>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func,
+         typename OuterDist&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+symmetric_distribution&lt;RealType, W, N, Func,
+                       OuterDist&gt;::symmetric_distribution(
+    RealType x0,
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func,
+    OuterDist outer_dist,
+    RealType outer_area);
+</code></pre>
+<pre><code class="language-c++">template&lt;typename RealType, std::size_t W, std::size_t N, typename Func,
+         typename OuterDist, typename OuterFunc&gt;
+template&lt;typename InputIt1, typename InputIt2, typename InputIt3&gt;
+symmetric_distribution&lt;RealType, W, N, Func,
+                       OuterDist, OuterFunc&gt;::symmetric_distribution(
+    RealType x0,
+    InputIt1 x_first, InputIt1 x_last,
+    InputIt2 finf_first,
+    InputIt3 fsup_first,
+    Func func,
+    OuterDist outer_dist, OuterFunc outer_func,
+    RealType outer_area);
+</code></pre>
+
+                </div>
+
+                <!-- Mobile navigation buttons -->
+                
+                    <a href="distribution/overview.html" class="mobile-nav-chapters previous">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                
+
+                
+                    <a href="distribution/members.html" class="mobile-nav-chapters next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                
+
+            </div>
+
+            
+                <a href="distribution/overview.html" class="nav-chapters previous" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+            
+
+            
+                <a href="distribution/members.html" class="nav-chapters next" title="You can navigate through the chapters using the arrow keys">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            
+
+        </div>
+
+
+        <!-- Local fallback for Font Awesome -->
+        <script>
+            if ($(".fa").css("font-family") !== "FontAwesome") {
+                $('<link rel="stylesheet" type="text/css" href="_FontAwesome/css/font-awesome.css">').prependTo('head');
+            }
+        </script>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        
+
+        <script src="highlight.js"></script>
+        <script src="book.js"></script>
+    </body>
+</html>
