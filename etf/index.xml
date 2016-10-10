@@ -376,10 +376,10 @@ which drops to &amp;ldquo;only&amp;rdquo; 931 µs.&lt;/p&gt;
 
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 
-&lt;p&gt;The ETF method provides samples which quality is substantially higher
-than achievable with the fastest algorithm to date—the ziggurat method—for a
-roughly equivalent computational cost and a much greater versatility in terms
-of target distributions.&lt;/p&gt;
+&lt;p&gt;The ETF method generates samples which quality is substantially higher
+than that achievable with the fastest algorithm to date—the ziggurat method—for
+a roughly equivalent computational cost and a much greater versatility
+regarding its applicability to arbitrary continuous univariate distributions.&lt;/p&gt;
 
 &lt;h2 id=&#34;todo&#34;&gt;Todo&lt;/h2&gt;
 
