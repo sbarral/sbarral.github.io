@@ -300,13 +300,13 @@ was also made portable and generic over the RNG precision (parameter <em>W</em>)
 the same time, an apparently yet unreported bug in the original ziggurat
 algorithm which seems to have propagated to many implementations was fixed (see
 comments in the
-<a href="https://github.com/sbarral/etf-cpp/benchmark/ziggurat_normal.hpp">source code</a>).
+<a href="https://github.com/sbarral/etf-cpp/blob/master/benchmark/ziggurat_normal.hpp">source code</a>).
 The original ziggurat algorithm is also benchmarked as a sanity check to make
 sure that the speed of the corrected and precision-generic algorithm remains
 comparable.</p>
 
 <p>The
-<a href="https://github.com/sbarral/etf-cpp/benchmark/etf_normal.hpp">ETF implementation</a>
+<a href="https://github.com/sbarral/etf-cpp/blob/master/benchmark/etf_normal.hpp">ETF implementation</a>
 reflects most of the feature of the corrected ziggurat implementation but is
 additionally generic over the number of bits <em>N</em> of the table index whereas the
 ziggurat was hardcoded with <em>N</em>=7.  In order to compare apples to apples, all
@@ -317,7 +317,7 @@ It sums 10000 normal variates with either the 32-bit MT19937 (for <em>W</em>=32)
 with the 64-bit MT19937 (for <em>W</em>=64) of the C++ standard library as RNG.
 Each of the reported timing is an average over 1000 tests.
 Feel free to contribute your timings using the
-<a href="https://github.com/sbarral/etf-cpp/benchmark/timing.cpp">benchmarking code</a>.</p>
+<a href="https://github.com/sbarral/etf-cpp/blob/master/benchmark/timing.cpp">benchmarking code</a>.</p>
 
 <table>
 <thead>
@@ -405,7 +405,7 @@ regarding its applicability to arbitrary continuous univariate distributions.</p
 
 <h2 id="todo">Todo</h2>
 
-<p>Hopefully a Rust implementation will follow soon.</p>
+<p>Hopefully a Rust implementation will follow. Maybe. One day.</p>
 
 <p>Contributors for ports to other languages are very welcome.</p>
 
@@ -428,7 +428,7 @@ Technical note, University of Oxford (2005).</p>
 
     </article>
     <footer>
-  <p>Serge BARRAL │ Last updated: 10 OCT 2016</p>
+  <p>Serge BARRAL │ Last updated: February 12, 2018</p>
 </footer>
 
   </div>
